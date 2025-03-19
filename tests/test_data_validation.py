@@ -1,31 +1,14 @@
 import pytest
-from framework.data_validator import DataValidator
-import yaml
+from conftest import source_data, raw_layer_data, target_data
 
-with open("config.yaml", "r") as file:
-    config = yaml.safe_load(file)
+@pytest.mark.usefixtures("source_data", "raw_layer_data")
+def test_data_consistency_source_raw(source_data, raw_layer_data):
+    """Test data consistency between source and raw layer"""
+    mismatches = (source_data != raw_layer_data).sum().sum()
+    assert mismatches == 0, f"Data mismatch detected in {mismatches} cells between source and raw layer"
 
-@pytest.fixture(scope="module")
-def data_validator():
-    return DataValidator(
-        source_path=config["source_file"],
-        raw_query="SELECT * FROM raw_layer_table WHERE ingestion_date BETWEEN '2023-01-01' AND '2023-12-31'",
-        target_query="SELECT * FROM target_table"
-    )
-
-@pytest.fixture(scope="module")
-def source_data():
-    return data_validator().load_source_data(config["source_file"])
-
-@pytest.fixture(scope="module")
-def raw_layer_data(data_validator):
-    return data_validator.fetch_raw_data()
-
-@pytest.fixture(scope="module")
-def target_data(data_validator):
-    return data_validator.fetch_target_data()
-
-def test_data_validation(source_data, raw_layer_data, target_data):
-    validator = DataValidator(config["source_file"], "", "")
-    validator.validate_data(source_data, raw_layer_data)
-    validator.validate_data(raw_layer_data, target_data)
+@pytest.mark.usefixtures("raw_layer_data", "target_data")
+def test_data_consistency_raw_target(raw_layer_data, target_data):
+    """Test data consistency between raw layer and target"""
+    mismatches = (raw_layer_data != target_data).sum().sum()
+    assert mismatches == 0, f"Data mismatch detected in {mismatches} cells between raw layer and target"
