@@ -1,5 +1,5 @@
-import pytest 
-from conftest import source_data, raw_layer_data, target_data
+import pytest
+
 
 @pytest.mark.usefixtures("source_data", "raw_layer_data")
 def test_schema_validation_source_raw(source_data, raw_layer_data):

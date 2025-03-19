@@ -1,5 +1,5 @@
 import pytest
-from conftest import source_data, raw_layer_data, target_data
+
 
 @pytest.mark.usefixtures("raw_layer_data")
 def test_anomaly_detection_raw(raw_layer_data):

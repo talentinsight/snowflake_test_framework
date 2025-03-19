@@ -1,5 +1,5 @@
 import pytest
-from conftest import source_data, raw_layer_data, target_data
+
 
 @pytest.mark.usefixtures("source_data", "raw_layer_data")
 def test_data_consistency_source_raw(source_data, raw_layer_data):
