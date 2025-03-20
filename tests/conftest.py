@@ -3,9 +3,29 @@ import yaml
 import logging
 from framework.data_validator import DataValidator
 from framework.data_extractor import DataExtractor
+import os
 
 # Configure logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
+def pytest_configure(config):
+    """Ensure reports directory exists before test execution"""
+    reports_dir = "reports"
+    if not os.path.exists(reports_dir):
+        os.makedirs(reports_dir)
+
+def pytest_html_report_title(report):
+    """Customize the title of the HTML report"""
+    report.title = "🔥 Automated Test Report - Snowflake Framework 🔥"
+
+@pytest.hookimpl(tryfirst=True)
+def pytest_html_results_summary(prefix, summary, postfix):
+    """Add custom metadata to the test report"""
+    prefix.extend([
+        "<p><strong>Project:</strong> Snowflake Data Test Framework</p>",
+        "<p><strong>Test Environment:</strong> Production</p>",
+        "<p><strong>Tester:</strong> Your Name</p>"
+    ])
 
 # Load configuration
 with open("config.yaml", "r") as file:

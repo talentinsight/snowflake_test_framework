@@ -1,0 +1,19 @@
+# Virtual environment
+venv/
+.venv/
+
+
+# Pytest cache and compiled files
+__pycache__/
+*.pyc
+*.pyo
+
+# Test reports (Generated on each test run)
+reports/
+
+# Personal configuration files (Avoid pushing sensitive credentials)
+config.yaml
+.env
+# IDE settings (VS Code, PyCharm, etc.)
+.idea/
+.vscode/
